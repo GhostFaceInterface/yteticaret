@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'static/style.css' %}">
+
+{% block title %}
+anasayfa
+{% endblock %}
+
+
+{% block content %}
+<div class="container pt-5">
+    <div class="row">
+      {% for urun in urunler  %}
+        <div class="col-md-3 col-6 mt-3">
+            <div class="card">
+                <img src="{{ urun.resim.url }}" class="card-img-top" style="width: 100%; height: 200px; object-fit: cover;" alt="...">
+                <div class="card-body">
+                  <p class="card-text text-secondary mb-1">{{urun.marka.isim}}</p>
+                  <h5 class="card-title">{{urun.isim}}</h5>
+                  {% if urun.indirimli_fiyat %}
+                  <p class="card-text fs-5">{{urun.indirimli_fiyat}}₺ <del class="text-secondary fs-6">{{urun.fiyat}} ₺</del></p>
+                  {% else %}
+                  <p class="card-text fs-5">{{urun.fiyat}}₺ </p>
+                  {% endif %}
+                  <a href="{% url 'urun_detay' urun.slug %}" class="btn btn-success" style="width: 100%;">incele</a>
+                </div>
+              </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
