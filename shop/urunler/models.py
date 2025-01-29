@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.text import slugify
 # Create your models here.
 
 class Kategoriler(models.Model):
@@ -69,3 +70,26 @@ class Urunler(models.Model):
 
     def __str__(self):  
         return self.isim
+
+    def save(self,*args,**kwargs):
+        if not self.slug:
+            self.slug=slugify(self.isim)
+            super(Urunler,self).save(*args,**kwargs)
+        return self.slug
+
+
+class Varyasyonlar(models.Model):
+    urun=models.ForeignKey(Urunler,on_delete=models.CASCADE)
+    parent=models.ForeignKey('self',on_delete=models.CASCADE,null=True,blank=True)
+    varyasyon=models.CharField(max_length=155)
+    fiyat=models.DecimalField(max_digits=10,decimal_places=2)
+    stok=models.PositiveIntegerField()
+    aktifmi=models.BooleanField(default=True)
+    resim=models.ImageField(upload_to='varyasyonresimleri',null=True,blank=True)
+
+    class Meta:
+        verbose_name_plural="Varyasyonlar"
+        verbose_name="Varyasyon"
+
+    def __str__(self):  
+        return self.varyasyon

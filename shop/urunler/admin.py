@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Kategoriler,Markalar,Urunler,Etiketler
+from .models import Kategoriler,Markalar,Urunler,Etiketler,Varyasyonlar
 
 class KategorilerAdmin(admin.ModelAdmin):
     list_display = ['isim',"seo_title","slug","aktifmi"]
@@ -22,5 +22,18 @@ class UrunlerAdmin(admin.ModelAdmin):
     list_filter = ['aktifmi','isim','kategori','marka']
     search_fields = ['isim','seo_title','slug']
 
+
+class InlineVaryasyonlar(admin.TabularInline):
+    model = Varyasyonlar
+    extra = 1
+
+class UrunlerAdmin(admin.ModelAdmin):
+    list_display = ['isim','fiyat','marka','kategori','indirimli_fiyat','aktifmi','resim','tarih']
+    list_filter = ['aktifmi','isim','kategori','marka']
+    search_fields = ['isim','seo_title','slug']
+    inlines = [InlineVaryasyonlar]
+
+admin.site.register(Varyasyonlar)
 admin.site.register(Urunler, UrunlerAdmin)
 admin.site.register(Etiketler)
+
